@@ -11,7 +11,7 @@ import { Button } from './ui/button';
 import { BiSolidTrash } from 'react-icons/bi';
 
 const Designer = () => {
-    const {elements, addElement} = useDesigner();
+    const {elements, addElement, selectedElement, setSelectedElement, removeElement} = useDesigner();
 
     const droppable = useDroppable({
         id: 'designer-drop-area',
@@ -26,25 +26,87 @@ const Designer = () => {
             if(!active || !over) return;
 
             const isDesignerBtnElement = active.data?.current?.isDesignerBtn;
+            const isDroppingOverDesignerArea = over.data?.current?.isDesignerDropArea;
 
-            if(isDesignerBtnElement) {
+            // First scenario: dropping a sidebar btn element over the designer area
+            const droppingSidebarBtnOverDesignerArea = isDesignerBtnElement && isDroppingOverDesignerArea;
+            if(droppingSidebarBtnOverDesignerArea) {
                 const type = active.data?.current?.type as ElementsType;
                 const newElements = FormElements[type].construct(
                     idGenerator()
                 )
 
-                addElement(0, newElements);
+                addElement(elements.length, newElements);
+                return;
+            }
+
+            const isDroppingOverDesignerTopHalf = over.data?.current?.isTopHalfDesignerElement;
+            const isDroppingOverDesignerBottomHalf = over.data?.current?.isBottomHalfDesignerElement;
+            const isDroppingOverDesignerElement = isDroppingOverDesignerTopHalf || isDroppingOverDesignerBottomHalf;
+            const droppingSidebarBtnOverDesignerElement = isDesignerBtnElement && isDroppingOverDesignerElement;
+
+            // Second scenario: dropping a sidebar btn element over a designer element
+            if(droppingSidebarBtnOverDesignerElement) {
+                const type = active.data?.current?.type as ElementsType;
+                const newElements = FormElements[type].construct(
+                    idGenerator()
+                )
+
+                const overId = over.data?.current?.elementId;
+
+                const overElementIndex = elements.findIndex((el) => el.id === overId);
+                if(overElementIndex === -1) {
+                    throw new Error("Element not found");
+                };
+
+                let indexForNewElement = overElementIndex;
+                if(isDroppingOverDesignerBottomHalf) {
+                    indexForNewElement = overElementIndex + 1;
+                }
+
+                addElement(indexForNewElement, newElements);
+                return;
+            }
+
+            // Thid scenario: moving a designer element over another designer element
+            const isDraggingDesignerElement = active.data?.current?.isDesignerElement;
+            
+            const draggingDesignerElementOverAnotherDesignerElement = 
+                isDroppingOverDesignerElement && isDraggingDesignerElement;
+
+            if(draggingDesignerElementOverAnotherDesignerElement) {
+                const activeId = active.data?.current?.elementId;
+                const overId = over.data?.current?.elementId;
+
+                const activeElementIndex = elements.findIndex((el) => el.id === activeId);
+                const overElementIndex = elements.findIndex((el) => el.id === overId);
+
+                if(activeElementIndex === -1 || overElementIndex === -1) {
+                    throw new Error("Element not found");
+                }
+
+                const activeElement = {...elements[activeElementIndex]};
+                removeElement(activeId);
+
+                let indexForNewElement = overElementIndex;
+                if(isDroppingOverDesignerBottomHalf) {
+                    indexForNewElement = overElementIndex + 1;
+                }
+
+                addElement(indexForNewElement, activeElement);
             }
         }
     })
 
     return (
         <div className="flex w-full h-full">
-            <div className="p-4 w-full">
+            <div className="p-4 w-full" onClick={()=> {
+                if(selectedElement) setSelectedElement(null);
+            }}>
                 <div 
                     ref={droppable.setNodeRef}
                     className={cn("bg-background max-w-[920px] h-full m-auto rounded-xl flex flex-col flex-grow items-center justify-start flex-1 overflow-y-auto",
-                        droppable.isOver && "ring-2 ring-primary"
+                        droppable.isOver && "ring-4 ring-primary ring-inset"
                     )}
                 >
                     {!droppable.isOver && elements.length === 0 && (
@@ -74,7 +136,7 @@ const Designer = () => {
 function DesigerElementWrapper({element}: {
     element: FormElementInstance
 }) {
-    const {removeElement} = useDesigner();
+    const {removeElement, selectedElement, setSelectedElement} = useDesigner();
     const [mouseIsOver, setMouseIsOver] = React.useState(false);
     const topHalf = useDroppable({
         id: element.id + '-top',
@@ -90,7 +152,7 @@ function DesigerElementWrapper({element}: {
         data: {
             type: element.type,
             elementId: element.id,
-            isTopHalfDesignerElement: true
+            isBottomHalfDesignerElement: true
         }
     })
 
@@ -114,6 +176,10 @@ function DesigerElementWrapper({element}: {
             className="relative h-[120px] flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
             onMouseEnter={() => setMouseIsOver(true)}
             onMouseLeave={() => setMouseIsOver(false)}
+            onClick={(e) => {
+                e.stopPropagation();
+                setSelectedElement(element)
+            }}
         >
             <div 
                 ref={topHalf.setNodeRef} 
@@ -130,7 +196,8 @@ function DesigerElementWrapper({element}: {
                             <Button 
                                 className="flex justify-center h-full border rounded-md rounded-l-none bg-red-500"
                                 variant={"outline"}
-                                onClick={() => {
+                                onClick={(e) => {
+                                    e.stopPropagation();
                                     removeElement(element.id);
                                 }}
                             >
