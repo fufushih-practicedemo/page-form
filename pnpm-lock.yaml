@@ -47,6 +47,7 @@ specifiers:
   postcss: ^8
   prisma: ^5.6.0
   react: ^18
+  react-confetti: ^6.1.0
   react-day-picker: ^8.9.1
   react-dom: ^18
   react-hook-form: ^7.48.2
@@ -96,6 +97,7 @@ dependencies:
   next: 14.0.3_biqbaboplfbrettd7655fr4n2y
   next-themes: 0.2.1_pvgaconotzu4vdk37yty4okb7y
   react: 18.2.0
+  react-confetti: 6.1.0_react@18.2.0
   react-day-picker: 8.9.1_kzhlcyde2l6xjiirkbg7jzhosa
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.48.2_react@18.2.0
@@ -3654,6 +3656,16 @@ packages:
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
+  /react-confetti/6.1.0_react@18.2.0:
+    resolution: {integrity: sha512-7Ypx4vz0+g8ECVxr88W9zhcQpbeujJAVqL14ZnXJ3I23mOI9/oBVTQ3dkJhUmB0D6XOtCZEM6N0Gm9PMngkORw==}
+    engines: {node: '>=10.18'}
+    peerDependencies:
+      react: ^16.3.0 || ^17.0.1 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      tween-functions: 1.2.0
+    dev: false
+
   /react-day-picker/8.9.1_kzhlcyde2l6xjiirkbg7jzhosa:
     resolution: {integrity: sha512-W0SPApKIsYq+XCtfGeMYDoU0KbsG3wfkYtlw8l+vZp6KoBXGOlhzBUp4tNx1XiwiOZwhfdGOlj7NGSCKGSlg5Q==}
     peerDependencies:
@@ -4130,6 +4142,10 @@ packages:
 
   /tslib/2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
+    dev: false
+
+  /tween-functions/1.2.0:
+    resolution: {integrity: sha512-PZBtLYcCLtEcjL14Fzb1gSxPBeL7nWvGhO5ZFPGqziCcr8uvHp0NDmdjBchp6KHL+tExcg0m3NISmKxhU394dA==}
     dev: false
 
   /type-check/0.4.0:
