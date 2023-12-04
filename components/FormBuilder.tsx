@@ -39,7 +39,7 @@ const FormBuilder = ({form}: {
                     {
                         !form.published && (
                             <>
-                                <SaveFormBtn  />
+                                <SaveFormBtn id={form.id}  />
                                 <PublishFormBtn  />
                             </>
                         )

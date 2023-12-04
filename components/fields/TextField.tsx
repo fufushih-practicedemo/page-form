@@ -7,7 +7,7 @@ import { Input } from "../ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useDesigner from "../hooks/useDesigner";
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
@@ -42,7 +42,7 @@ export const TextFieldFormElement: FormElement = {
         label: "Text field",
     },
     designerComponent: DesignerComponent,
-    formComponent: () => <div>Form component</div>,
+    formComponent: FormComponent,
     propertiesComponent: PropertiesComponent,
 }
 
@@ -70,6 +70,37 @@ function DesignerComponent({
             )}
         </div>
     )
+}
+
+function FormComponent({
+    elementInstance,
+    isInvalid,
+    defaultValue,
+}: {
+    elementInstance: FormElementInstance;
+    isInvalid?: boolean;
+    defaultValue?: string;
+}) {
+    const element = elementInstance as CustomInstance;
+
+    const [value, setValue] = useState(defaultValue || "");
+    const [error, setError] = useState(false);
+
+    useEffect(() => {
+        setError(isInvalid === true);
+    }, [isInvalid]);
+
+    const { label, required, placeHolder, helperText } = element.extraAttributes;
+    return (
+        <div className="flex flex-col gap-2 w-full">
+            <Label className={cn(error && "text-red-500")}>
+            {label}
+            {required && "*"}
+            </Label>
+            <Input placeholder={placeHolder} />
+            {helperText && <p className={cn("text-muted-foreground text-[0.8rem]", error && "text-red-500")}>{helperText}</p>}
+        </div>
+    );
 }
 
 function PropertiesComponent({
