@@ -92,7 +92,7 @@ interface StatsCardProps {
   loading: boolean;
   className?: string;
 }
-function StatsCard(props: StatsCardProps) {
+export function StatsCard(props: StatsCardProps) {
   const { title, icon, helperText, value, loading, className } = props;
   return (
     <Card>

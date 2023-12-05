@@ -10,7 +10,7 @@ import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors } from '@dn
 import DragOverleyWrapper from './DragOverleyWrapper';
 import useDesigner from './hooks/useDesigner';
 import { ImSpinner2 } from 'react-icons/im';
-import { BsArrowRight } from 'react-icons/bs';
+import { BsArrowLeft, BsArrowRight } from 'react-icons/bs';
 import { Input } from './ui/input';
 import { toast } from './ui/use-toast';
 import { Button } from './ui/button';
