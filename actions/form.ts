@@ -155,3 +155,18 @@ export async function SubmitForm(formUrl: string, content: string) {
     });
 }
     
+export async function GetFormWithSubmissions(id: number) {
+    if(!user) {
+        throw new UserNotFoundError();
+    }
+
+    return await prisma.form.findUnique({
+        where: {
+            userId: user.id,
+            id,
+        },
+        include: {
+            FormSubmission: true,
+        },
+    });
+}
