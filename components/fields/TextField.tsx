@@ -1,7 +1,7 @@
 'use client';
 
 import { MdTextFields } from "react-icons/md";
-import { ElementsType, FormElement, FormElementInstance } from "../FormElements";
+import { ElementsType, FormElement, FormElementInstance, SubmitFunction } from "../FormElements";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { z } from "zod";
@@ -44,6 +44,15 @@ export const TextFieldFormElement: FormElement = {
     designerComponent: DesignerComponent,
     formComponent: FormComponent,
     propertiesComponent: PropertiesComponent,
+
+    validate: (formElement: FormElementInstance, currentValue: string) => {
+        const element = formElement as CustomInstance;
+        if(element.extraAttributes.require) {
+            return currentValue.length > 0;
+        }
+
+        return true;
+    }
 }
 
 type CustomInstance = FormElementInstance & {
@@ -74,10 +83,12 @@ function DesignerComponent({
 
 function FormComponent({
     elementInstance,
+    submitValue,
     isInvalid,
     defaultValue,
 }: {
     elementInstance: FormElementInstance;
+    submitValue?: SubmitFunction;
     isInvalid?: boolean;
     defaultValue?: string;
 }) {
@@ -97,7 +108,19 @@ function FormComponent({
             {label}
             {required && "*"}
             </Label>
-            <Input placeholder={placeHolder} />
+            <Input 
+                className={cn(error && "border-red-500")}
+                placeholder={placeHolder} 
+                onChange={(e) => setValue(e.target.value)} 
+                onBlur={(e) => {
+                    if(!submitValue) return;
+                    const valid = TextFieldFormElement.validate(element, e.target.value);
+                    setError(!valid);
+                    if(!valid) return;
+                    submitValue(element.id, e.target.value);
+                }}
+                value={value}
+            />
             {helperText && <p className={cn("text-muted-foreground text-[0.8rem]", error && "text-red-500")}>{helperText}</p>}
         </div>
     );
