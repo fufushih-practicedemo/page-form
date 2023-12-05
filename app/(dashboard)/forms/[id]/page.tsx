@@ -87,7 +87,7 @@ async function FormDetailPage({params}: {
         </div>
   
         <div className="container pt-10">
-          {/* <SubmissionsTable id={form.id} /> */}
+          <SubmissionsTable id={form.id} />
         </div>
       </>
     )
@@ -117,6 +117,11 @@ async function SubmissionsTable({ id }: { id: number }) {
   formElements.forEach((element) => {
     switch (element.type) {
       case "TextField":
+      case "NumberField":
+      case "TextAreaField":
+      case "DateField":
+      case "SelectField":
+      case "CheckboxField":
         columns.push({
           id: element.id,
           label: element.extraAttributes?.label,
@@ -175,6 +180,18 @@ async function SubmissionsTable({ id }: { id: number }) {
 
 function RowCell({ type, value }: { type: ElementsType; value: string }) {
   let node: ReactNode = value;
+
+  switch (type) {
+    case "DateField":
+      if (!value) break;
+      const date = new Date(value);
+      node = <Badge variant={"outline"}>{format(date, "dd/MM/yyyy")}</Badge>;
+      break;
+    case "CheckboxField":
+      const checked = value === "true";
+      node = <Checkbox checked={checked} disabled />;
+      break;
+  }
 
   return <TableCell>{node}</TableCell>;
 }
