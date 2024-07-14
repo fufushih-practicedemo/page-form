@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ElementsType, FormElementInstance } from '@/components/FormElements';
 import FormLinkShare from '@/components/FormLinkShare';
 import VisitBtn from '@/components/VisitBtn';
-import { StatsCard } from '../../page';
+import { StatsCard } from '../../dashboard/page';
 
 async function FormDetailPage({params}: {
     params: {
