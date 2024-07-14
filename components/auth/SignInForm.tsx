@@ -8,8 +8,9 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { signIn, signInSchema } from '@/actions/auth';
+import { signIn } from '@/actions/auth';
 import GoogleOAuthButton from './GoogleOAuthButton';
+import { signInSchema } from "@/utils/definitions";
 
 const SignInForm = () => {
   const router = useRouter()

@@ -15,7 +15,8 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { signUp, signUpSchema } from '@/actions/auth';
+import { signUp } from '@/actions/auth';
+import { signUpSchema } from "@/utils/definitions";
 
 const SignUpForm = () => {
   const router = useRouter()
