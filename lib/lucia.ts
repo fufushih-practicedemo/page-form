@@ -38,6 +38,10 @@ export const getUser = async () => {
   } catch {
     return null
   }
+
+  if (user?.id === undefined) {
+    return null;
+  }
   const dbUser = await prisma.user.findUnique({
     where: {
       id: user?.id
@@ -51,5 +55,8 @@ export const getUser = async () => {
 
   if (!dbUser) return null;
 
-  return dbUser;
+  return {
+    id: user?.id,
+    ...dbUser
+  };
 }
